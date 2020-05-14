@@ -8,7 +8,7 @@ ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils 
 RUN mkdir -p /usr/src/critical-css-api/node_modules && chown -R node:node /usr/src/critical-css-api && mkdir -p /usr/src/critical-css-api/public
 WORKDIR /usr/src/critical-css-api
 COPY package*.json ./
-RUN yarn prod
+RUN yarn install
 COPY . .
 EXPOSE 8080
 CMD [ "node", "yarn prod" ]
