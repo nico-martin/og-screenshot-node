@@ -31,7 +31,10 @@ app.get('/', async (req: express.Request, res: express.Response) => {
   const image = `${FOLDER}images/${sha1(url + width + height)}.png`;
 
   if (!fs.existsSync(image) || force) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox'],
+    });
     const page = await browser.newPage();
     const removeElement = async (selector: string) => {
       await page.evaluate(sel => {
