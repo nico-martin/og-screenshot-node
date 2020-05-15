@@ -19,15 +19,19 @@ const delay = (time: number) =>
 
 app.get('/', async (req: express.Request, res: express.Response) => {
   const url = String(req.query.url) || '';
-  if (url.indexOf('https://slides.nico.dev/') !== 0) {
+  if (
+    url.indexOf('https://slides.nico.dev/') !== 0 &&
+    url.indexOf('https://localhost:2018') !== 0
+  ) {
     res.status(400).send('invalid url');
+    return;
   }
 
   !fs.existsSync(FOLDER) && fs.mkdirSync(FOLDER);
   !fs.existsSync(`${FOLDER}images/`) && fs.mkdirSync(`${FOLDER}images/`);
   const width = Number(req.query.width) || 900;
   const height = Number(req.query.height) || 500;
-  const force = String(req.query.force) === 'true';
+  const force = String(req.query.rebuild) === 'true';
   const image = `${FOLDER}images/${sha1(url + width + height)}.png`;
 
   if (!fs.existsSync(image) || force) {
@@ -35,6 +39,7 @@ app.get('/', async (req: express.Request, res: express.Response) => {
       headless: true,
       args: ['--no-sandbox'],
     });
+
     const page = await browser.newPage();
     const removeElement = async (selector: string) => {
       await page.evaluate(sel => {
@@ -44,15 +49,23 @@ app.get('/', async (req: express.Request, res: express.Response) => {
         }
       }, selector);
     };
+
+    await page.goto(url);
+    await page.evaluate(sel => {
+      const elements = document.querySelectorAll(sel);
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.display = 'block';
+      }
+    }, '.puppeteer');
     await page.setViewport({
       width,
       height,
+      //deviceScaleFactor: 2,
     });
-    await page.goto(url);
-    await page.keyboard.press('Space');
+    await delay(1000);
     await removeElement('.controls');
     await removeElement('.progress');
-    await delay(1000);
+    await removeElement('.footer');
     await page.screenshot({
       path: image,
       fullPage: true,
