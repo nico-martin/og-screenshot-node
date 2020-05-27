@@ -20,8 +20,7 @@ const delay = (time: number) =>
 app.get('/', async (req: express.Request, res: express.Response) => {
   const url = String(req.query.url) || '';
   if (
-    url.indexOf('https://slides.nico.dev/') !== 0 &&
-    url.indexOf('https://localhost:2018') !== 0
+    !/^https:\/\/slides\.nico\.dev\/[0-9a-z-]*\/(\#\/([0-9]*\/?)*)?$/.test(url)
   ) {
     res.status(400).send('invalid url');
     return;
