@@ -1,5 +1,5 @@
 # Generate preview images for slides.nico.dev
-A nodeJS tool that generates preview images for slides.nico.dev written in TypeScript
+A Node.js API that generates preview images for slides.nico.dev written in TypeScript
 
 **Twitter Card:**
 
