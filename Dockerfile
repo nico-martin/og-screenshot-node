@@ -5,8 +5,8 @@ libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 li
 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
-RUN mkdir -p /usr/src/critical-css-api/node_modules && chown -R node:node /usr/src/critical-css-api && mkdir -p /usr/src/critical-css-api/public
-WORKDIR /usr/src/critical-css-api
+RUN mkdir -p /usr/src/slides-img/node_modules && chown -R node:node /usr/src/slides-img && mkdir -p /usr/src/slides-img/public
+WORKDIR /usr/src/slides-img
 COPY package*.json ./
 RUN yarn install
 COPY . .
