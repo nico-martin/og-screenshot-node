@@ -5,7 +5,7 @@ import puppeteer from 'puppeteer';
 import fs from 'fs';
 import sha1 from 'sha1';
 
-const PORT = Number(process.env.PORT) || 8080;
+const PORT = Number(process.env.PORT) || 8081;
 const FOLDER = (String(process.env.FOLDER) || 'public') + '/';
 
 const app: express.Application = express();
@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.static(FOLDER));
 
 const delay = (time: number): Promise<void> =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     setTimeout(resolve, time);
   });
 
@@ -35,25 +35,25 @@ app.get('/', async (req: express.Request, res: express.Response) => {
 
   if (!fs.existsSync(image) || force) {
     const browser = await puppeteer.launch({
-      headless: true,
+      headless: 'new',
       args: ['--no-sandbox'],
     });
 
     const page = await browser.newPage();
     const removeElement = async (selector: string): Promise<void> => {
-      await page.evaluate(sel => {
+      await page.evaluate((sel) => {
         const elements = document.querySelectorAll(sel);
         for (let i = 0; i < elements.length; i++) {
-          elements[i].parentNode.removeChild(elements[i]);
+          elements[i]?.parentNode?.removeChild(elements[i]);
         }
       }, selector);
     };
 
     await page.goto(url);
-    await page.evaluate(sel => {
+    await page.evaluate((sel) => {
       const elements = document.querySelectorAll(sel);
       for (let i = 0; i < elements.length; i++) {
-        elements[i].style.display = 'block';
+        (elements[i] as HTMLElement).style.display = 'block';
       }
     }, '.puppeteer');
     await page.setViewport({
@@ -69,7 +69,7 @@ app.get('/', async (req: express.Request, res: express.Response) => {
       path: image,
       fullPage: true,
     });
-    //await browser.close();
+    await browser.close();
   }
 
   const file = await fs.readFileSync(image);
