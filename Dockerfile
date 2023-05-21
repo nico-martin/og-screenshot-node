@@ -8,7 +8,7 @@ ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils 
 RUN mkdir -p /usr/src/slides-img/node_modules && chown -R node:node /usr/src/slides-img && mkdir -p /usr/src/slides-img/public
 WORKDIR /usr/src/slides-img
 COPY package*.json ./
-RUN yarn install
+RUN npm install
 COPY . .
 EXPOSE 80
-CMD [ "node", "yarn prod" ]
+CMD [ "node", "npm run prod" ]
