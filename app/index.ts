@@ -12,7 +12,7 @@ const app: express.Application = express();
 app.use(cors());
 app.use(express.static(FOLDER));
 
-const delay = (time: number) =>
+const delay = (time: number): Promise<void> =>
   new Promise(resolve => {
     setTimeout(resolve, time);
   });
@@ -40,7 +40,7 @@ app.get('/', async (req: express.Request, res: express.Response) => {
     });
 
     const page = await browser.newPage();
-    const removeElement = async (selector: string) => {
+    const removeElement = async (selector: string): Promise<void> => {
       await page.evaluate(sel => {
         const elements = document.querySelectorAll(sel);
         for (let i = 0; i < elements.length; i++) {
@@ -69,7 +69,7 @@ app.get('/', async (req: express.Request, res: express.Response) => {
       path: image,
       fullPage: true,
     });
-    await browser.close();
+    //await browser.close();
   }
 
   const file = await fs.readFileSync(image);
